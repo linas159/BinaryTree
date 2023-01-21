@@ -8,8 +8,16 @@ namespace BinaryTree
 {
     internal class Program
     {
-        static void Main(string[] args)
+        public class Branch
         {
+            List<Branch> branches;
+            public Branch left, right, middle;
+
+            public Branch()
+            {
+                left = right = middle = null;
+            }
         }
+
     }
 }
