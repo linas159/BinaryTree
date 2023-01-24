@@ -4,69 +4,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BinaryTre
+class SomeStructure
 {
     public class Branch
     {
-        public Branch left, right, middle; // A branch has 3 possibilies to go
-
-        public Branch()
-        {
-            left = right = middle = null; // When branch is created all 3 possibilities are null
-        }
+        public List<Branch> child = new List<Branch>(); // Branch can have ANY number of child branches
     }
 
-    public class BinaryTree
+    static Branch newBranch() // Branch constructor
     {
-        Branch root;
+        Branch temp = new Branch();
+        return temp;
+    }
 
-        int maxDepth(Branch root)
+    class StructureAction
+    {
+        static int CalculateDepth(Branch root, int currentDepth) // Calculating max depth USING RECURSION
         {
-            if (root == null) // If the "way" is null it means it does not exist and this function is over
-                return 0;
-
-            // RECURSIVELY find the depth of each subtree.
-            int leftDepth = maxDepth(root.left);
-            int middleDepth = maxDepth(root.middle);
-            int rightDepth = maxDepth(root.right);
-            
-
-            // Get the largest depth.
-            if (leftDepth > rightDepth)
+            int maxDepth = currentDepth;
+            foreach (var child in root.child) // Goes through every child
             {
-                if (leftDepth > middleDepth)
-                    return (leftDepth + 1);
-                else
-                    return (middleDepth + 1);
+                int childDepth = CalculateDepth(child, currentDepth + 1); // Recursion
+                maxDepth = Math.Max(maxDepth, childDepth); // Compare current depth with max depth if bigger save as maxDepth
             }
-            else
-            {
-                if (rightDepth > middleDepth)
-                    return (rightDepth + 1);
-                else
-                    return (middleDepth + 1);
-            }
+            return maxDepth;
         }
 
-        public static void Main()
+        static void Main()
         {
             // Creating a structure as in the example
-            BinaryTree tree = new BinaryTree();
-            tree.root = new Branch();
-            tree.root.left = new Branch();
-            tree.root.right = new Branch();
-            tree.root.left.left = new Branch();
-            tree.root.right.left = new Branch();
-            tree.root.right.middle = new Branch();
-            tree.root.right.right = new Branch();
-            tree.root.right.left.left = new Branch();
-            tree.root.right.middle.left = new Branch();
-            tree.root.right.middle.right = new Branch();
-            tree.root.right.middle.left.middle = new Branch();
+            Branch root = newBranch();// Creating root (first layer)
+            root.child.Add(newBranch()); // Second layer
+            root.child.Add(newBranch());
+            (root.child[0]).child.Add(newBranch()); // Third layer
+            (root.child[1]).child.Add(newBranch());
+            (root.child[1]).child.Add(newBranch());
+            (root.child[1]).child.Add(newBranch());
+            ((root.child[1]).child[0]).child.Add(newBranch()); // Fourth layer
+            ((root.child[1]).child[1]).child.Add(newBranch());
+            ((root.child[1]).child[1]).child.Add(newBranch());
+            (((root.child[1]).child[1]).child[0]).child.Add(newBranch()); // Fifth layer
 
-            Console.WriteLine("Max depth: " + tree.maxDepth(tree.root)); // Finding maximum depth
+            Console.WriteLine("Max depth: " + StructureAction.CalculateDepth(root, 1)); // Finding maximum depth
             Console.ReadKey();
         }
     }
-    
 }
